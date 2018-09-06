@@ -2,6 +2,7 @@
 #learning method.
 
 import keras.utils
+from keras.preprocessing.image import ImageDataGenerator
 from keras.models import Sequential, Model
 from keras.layers import Input, Dense, Flatten, Dropout, Activation, Lambda, Permute, Reshape
 from keras.layers import Convolution2D, ZeroPadding2D, MaxPooling2D
@@ -14,15 +15,15 @@ K.set_image_data_format('channels_last')
 
 #Load in the pretrained model without the top layer
 model_location ="./Other Files/VGG_Face_pretrained_model_no_top.h5"
-pretrained_model = keras.models.load_model(modelLocation)
+pretrained_model = keras.models.load_model(model_location)
 
 #Set training and validation directory locations
 traindir="./Dataset/train"
 valdir="./Dataset/validation"
 
 #Want to keep about an 80:20 ratio for Training images to Validation images
-nTrain="80"
-nVal="20"
+nTrain=80
+nVal=20
 
 #Generate batches of tensor image data
 datagen = ImageDataGenerator(rescale = 1./255)
@@ -33,11 +34,11 @@ train_labels = np.zeros(shape=(nTrain,3))
 
 #Get training data from traindir
 train_generator = datagen.flow_from_directory(
-    train_dir,
+    traindir,
     target_size=(224,224),
     batch_size = batch_size,
     class_mode = 'categorical',
-    shuffle = shuffle)
+    shuffle = True)
 
 
 #Pass image through pretrained network to get 7 x 7 x 512 tensor
