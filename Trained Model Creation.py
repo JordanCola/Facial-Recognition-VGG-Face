@@ -72,13 +72,13 @@ def blankModel(topLayer):
     return newModel
 
 #Create our model
-model = blankModel(True)
+model = blankModel(False)
 
 #Loading in the matlab file containing the VGG model weights
 from scipy.io import loadmat
 
 #Should get changed depending on where file is
-filename = 'C:/Users/Jordan Svoboda/Documents/VGG Model Files/vgg-face.mat'
+filename = 'C:/Users/Jordan Svoboda/Documents/VGG Face Model Project/Other Files/vgg-face.mat'
 
 data = loadmat(filename,matlab_compatible=False, struct_as_record = False)
 
@@ -115,4 +115,4 @@ for i in range(layers.shape[1]):
 model.compile(optimizer = 'adam', loss = "categorical_crossentropy")
 
 #Save the model
-model.save("C:/Users/Jordan Svoboda/Documents/VGG Model Files/VGG_Face_pretrained_model.h5")
+model.save("C:/Users/Jordan Svoboda/Documents/VGG Face Model Project/Other Files/VGG_Face_pretrained_model_no_top.h5")
