@@ -12,13 +12,13 @@ from keras import backend as K
 K.set_image_data_format('channels_last')
 
 #Load in the trained model
-model = keras.models.load_model("VGG_Face_pretrained_model.h5")
+model = keras.models.load_model("./Other Files/VGG_Face_pretrained_model.h5")
 
 #Loading in the matlab file containing the VGG model weights
 from scipy.io import loadmat
 
 #Should get changed depending on where file is
-filename = "vgg-face.mat"
+filename = "./Other Files/vgg-face.mat"
 
 data = loadmat(filename,matlab_compatible=False, struct_as_record = False)
 
@@ -47,8 +47,8 @@ def prediction(kmodel, img):
 # https://realpython.com/face-recognition-with-python/
 
 #Set image and cascade file paths
-imagePath = "C:/Users/Jordan Svoboda/Documents/VGG Model Files/Mark_Hamill.jpg"
-cascadePath = "C:/Users/Jordan Svoboda/Documents/VGG Model Files/haarcascade_frontalface_default.xml"
+imagePath = "./Test Images/Mark_Hamill.jpg"
+cascadePath = "./Other Files/haarcascade_frontalface_default.xml"
 
 #Create the haar cascade
 faceCascade = cv2.CascadeClassifier(cascadePath)
