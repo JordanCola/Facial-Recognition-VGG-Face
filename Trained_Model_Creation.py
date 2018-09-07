@@ -72,7 +72,7 @@ def blankModel(topLayer):
     return newModel
 
 #Create our model
-model = blankModel(False)
+model = blankModel(True)
 
 #Loading in the matlab file containing the VGG model weights
 from scipy.io import loadmat
