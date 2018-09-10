@@ -39,6 +39,7 @@ def prediction(kmodel, img):
     best_index = np.argmax(out, axis=1)[0]
 
     best_name = description[best_index,0]
+    print('\nPrediction:')
     print(best_index, best_name[0], out[0,best_index], [np.min(out), np.max(out)])
 
 #BEGIN DETECTION IN UNCROPPED IMAGES
@@ -93,5 +94,4 @@ box = (x, y, x + w, y + h)
 cropImage = image.crop(box).resize((224,224))
 
 #Perform the prediction on the cropped image
-print("Begin Prediction\n")
 prediction(model, cropImage)
