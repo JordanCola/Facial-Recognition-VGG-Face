@@ -115,4 +115,4 @@ for i in range(layers.shape[1]):
 model.compile(optimizer = 'adam', loss = "categorical_crossentropy")
 
 #Save the model
-model.save("./Other Files/VGG_Face_pretrained_model_no_top.h5")
+model.save("./Other Files/VGG_Face_pretrained_model.h5")
