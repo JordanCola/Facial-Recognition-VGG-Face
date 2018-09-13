@@ -40,13 +40,16 @@ while True:
 
     cv2.imshow('Video', frame)
 
+    #Wait for keypress and save value
+    capKey = cv2.waitKey(1)
+
     #Take a picture if picKey is pressed
-    if cv2.waitKey(1) & 0xFF == ord(picKey):
+    if capKey & 0xFF == ord(picKey):
         cv2.imwrite("./Webcam Captures/frame%d.jpg" % count, frame)
         count += 1
 
     #Exit script if quitKey is pressed
-    elif cv2.waitKey(1) & 0xFF == ord('q'):
+    elif capKey & 0xFF == ord('q'):
         break
     
 
