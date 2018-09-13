@@ -11,10 +11,17 @@ import numpy as np
 directory = "./Test Images"
 cascadePath = "./Other Files/haarcascade_frontalface_default.xml"
 
-i = 1
+#The desired save location and name of subject for training
+saveDirectory = "./Dataset/train/Jordan Svoboda"
+name = "Jordan_Svoboda"
+
+#Initialize i to be the number of files in the directory to avoid 
+#overwriting any pieces of the dataset
+i = len(os.listdir(saveDirectory))
+
 for filename in os.listdir(directory):
     #Only use .jpg and .png files
-    if filename.endswith(".png") or filename.endswith(".jpg"):
+    if filename.endswith(".png") or filename.endswith(".jpg") or filename.endswith(".JPG"):
         #Set image path to be the path to the image file
         imagePath = directory +'/' + filename
     else:
@@ -52,6 +59,7 @@ for filename in os.listdir(directory):
 
     image = Image.open(imagePath)
 
+
     (x, y, w, h) = faces[0]
 
     center_x = (x + w) / 2
@@ -75,7 +83,6 @@ for filename in os.listdir(directory):
     cv2.waitKey(0)
 
     #Save the cropped image
-    saveDirectory = "./Dataset/train/Jordan Svoboda"
-    saveName = saveDirectory + "/" + "Jordan_Svoboda" + str(i) + ".jpg"
+    saveName = saveDirectory + "/" + name + str(i) + ".jpg"
     cv2.imwrite(saveName, cropImage_cv)
     i += 1
