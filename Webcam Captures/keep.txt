@@ -1,0 +1,3 @@
+This file is just a placeholder to ensure this folder gets put on git.
+This directory will hold webcam captures from Face_Recognition_Webcam.py
+and is the default location for Dataset_Image_Copy.
