@@ -35,7 +35,7 @@ while True:
 
     #Take a picture if picKey is pressed
     if cv2.waitKey(1) & 0xFF == ord(picKey):
-        cv2.imwrite("./Test Images/Test Webcam/frame%d.jpg" % count, frame)
+        cv2.imwrite("./Webcam Captures/frame%d.jpg" % count, frame)
         count += 1
 
     #Exit script if quitKey is pressed

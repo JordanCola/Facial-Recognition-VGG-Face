@@ -8,7 +8,7 @@ from PIL import Image
 import numpy as np
 
 #Set image and cascade file paths
-directory = "./Test Images/Test Webcam"
+directory = "./Webcam Captures"
 cascadePath = "./Other Files/haarcascade_frontalface_default.xml"
 
 #The desired save location and name of subject for training
