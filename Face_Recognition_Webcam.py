@@ -1,37 +1,44 @@
-#A Script to allow the usage of the webcam to identify faces 
+#A Script to allow the usage of the webcam to capture frames
+#for use in dataset creation. Run the script and press picKey
+#to capture a frame and 'q' to exit the script
 
 import cv2
 import sys
 
+picKey = ' ' #Currently set to space
+
+#Set cascade file path and create the face cascade
 cascPath = "./Other Files/haarcascade_frontalface_default.xml"
 faceCascade = cv2.CascadeClassifier(cascPath)
 
+#Set video source to default webcam
 video_capture = cv2.VideoCapture(0)
+
+#Initialize the count variable, used in naming frame images
 count = 0
+
 while True:
     #Capture frame-by-frame
     ret, frame = video_capture.read()
 
     gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
 
+    #Detect faces
     faces = faceCascade.detectMultiScale(
         gray,
-        scaleFactor = 1.1,
+        scaleFactor = 1.15,
         minNeighbors = 5,
         minSize = (30,30),
-        #flags = cv2.cv.CV_HAAR_SCALE_IMAGE
     )
 
-#Draw a rectangle around the faces
-    for (x, y, w, h) in faces:
-        #cv2.rectangle(frame, (x, y), (x+w, y+h), (0, 255, 0), 2)
-        
-        cv2.imshow('Video', frame)
+    cv2.imshow('Video', frame)
 
-    if cv2.waitKey(1) & 0xFF == ord('p'):
+    #Take a picture if picKey is pressed
+    if cv2.waitKey(1) & 0xFF == ord(picKey):
         cv2.imwrite("./Test Images/Test Webcam/frame%d.jpg" % count, frame)
         count += 1
 
+    #Exit script if quitKey is pressed
     elif cv2.waitKey(1) & 0xFF == ord('q'):
         break
     

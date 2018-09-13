@@ -8,7 +8,7 @@ from PIL import Image
 import numpy as np
 
 #Set image and cascade file paths
-directory = "./Test Images"
+directory = "./Test Images/Test Webcam"
 cascadePath = "./Other Files/haarcascade_frontalface_default.xml"
 
 #The desired save location and name of subject for training
@@ -39,12 +39,10 @@ for filename in os.listdir(directory):
     faces = faceCascade.detectMultiScale(
         gray,
         #image,
-        scaleFactor = 1.3,
+        scaleFactor = 1.15,
         minNeighbors = 5,
         minSize = (30, 30),
     )
-
-    #print('Found {0} faces!'.format(len(faces)))
 
     # Draw a rectangle around the faces
     for (x, y, w, h) in faces:
@@ -55,11 +53,7 @@ for filename in os.listdir(directory):
     #cv2.imshow("Faces found", image)
     #cv2.waitKey(0)
 
-    #Crop image and scale to 224x224
-
-    image = Image.open(imagePath)
-
-
+    #Set face boundries for cropping
     (x, y, w, h) = faces[0]
 
     center_x = (x + w) / 2
@@ -67,7 +61,8 @@ for filename in os.listdir(directory):
 
     box = (x, y, x + w, y + h)
 
-    #Crop Image
+    #Crop Image and resize to 224x224
+    image = Image.open(imagePath)
     cropImage = image.crop(box).resize((224,224))
 
     #Convert cropped image to an array so it can be read by imshow
