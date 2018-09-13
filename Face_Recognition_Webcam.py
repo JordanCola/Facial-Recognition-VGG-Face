@@ -4,6 +4,7 @@
 
 import cv2
 import sys
+import os
 
 picKey = ' ' #Currently set to space
 
@@ -16,6 +17,12 @@ video_capture = cv2.VideoCapture(0)
 
 #Initialize the count variable, used in naming frame images
 count = 0
+
+#Clears out any old images in this file
+for filename in os.listdir("./Webcam Captures"):
+    if filename.endswith(".jpg"):
+        os.remove("./Webcam Captures/" + filename)
+
 
 while True:
     #Capture frame-by-frame
