@@ -25,36 +25,4 @@ pretrained_model = keras.models.load_model(model_location)
 traindir="./Dataset/train"
 valdir="./Dataset/validation"
 
-#Want to keep about an 80:20 ratio for Training images to Validation images
-nTrain=80
-nVal=20
 
-#Generate batches of tensor image data
-datagen = ImageDataGenerator(rescale = 1./255)
-batch_size = 20
-
-train_features = np.zeros(shape=(nTrain, 7, 7, 512))
-train_labels = np.zeros(shape=(nTrain,3))
-
-#Get training data from traindir
-train_generator = datagen.flow_from_directory(
-    traindir,
-    target_size=(224,224),
-    batch_size = batch_size,
-    class_mode = 'categorical',
-    shuffle = True)
-
-
-#Pass image through pretrained network to get 7 x 7 x 512 tensor
-i = 0
-for inputs_batch, labels_batch in train_generator:
-    features_bathc = pretrained_model.predict(inputs_batch)
-    train_features[i * batch_size: (i + 1) * batch_size] = features_batch
-    train_labels[i * batch_size : (i + 1) * batch_size] = labels_batch
-    i += 1
-    if i*batch_size >= nImages:
-        break
-
-
-#Reshape the Tensor into a vector
-train_features = np.reshape(train_features, (nTrain, 7 * 7 * 512))
