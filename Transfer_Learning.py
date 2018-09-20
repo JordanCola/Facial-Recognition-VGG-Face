@@ -37,7 +37,7 @@ def save_bottleneck_features():
     datagen = ImageDataGenerator(rescale=1./255)
 
     pretrained_model = keras.models.load_model(model_location)
-    pretrained_model.summary()
+    #pretrained_model.summary()
     generator = datagen.flow_from_directory(
         train_dir,
         target_size = (img_width, image_height),
@@ -46,6 +46,9 @@ def save_bottleneck_features():
         shuffle = False)
     bottleneck_features_train = pretrained_model.predict_generator(
         generator, nTrain // batch_size)
+
+    print(str(bottleneck_features_train))
+
     np.save(open('bottleneck_features_train.npy', 'wb'),
         bottleneck_features_train)
 
@@ -72,23 +75,17 @@ def train_top_model():
         [0] * (nValidation // 2) + [1] * (nValidation // 2))
 
     newModel = keras.models.Sequential()
-
-    print("Train Data shape: " + str(train_data.shape[1:]))
-
-    layer = Flatten(input_shape=train_data.shape[1:])
-
-    newModel.add(layer)
+    newModel.add(Flatten(input_shape=train_data.shape[1:]))
     newModel.add(keras.layers.Dense(256, activation = 'relu'))
     newModel.add(keras.layers.Dropout(0.5))
     newModel.add(keras.layers.Dense(1, activation = 'softmax'))
-
-    print("Flatten Layer: " + str(layer.input))
-    newModel.summary()
 
     newModel.compile(optimizer = optimizers.RMSprop(lr=2e-4),
                 loss = 'binary_crossentropy',
                 metrics =['accuracy'])
 
+    #ValueError: Error when checking input: expected flatten_1_input to have 4 dimensions, but got array with shape (0, 1)
+    #Not sure what is causing this
     newModel.fit(train_data,
                 train_labels,
                 epochs = 20,
