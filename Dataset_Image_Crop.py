@@ -17,7 +17,7 @@ name = "Jordan_Svoboda"
 
 #Initialize i to be the number of files in the directory to avoid 
 #overwriting any pieces of the dataset
-i = len(os.listdir(saveDirectory))
+i = len(os.listdir(saveDirectory)) + 1
 
 for filename in os.listdir(directory):
     #Only use .jpg and .png files
