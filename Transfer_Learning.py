@@ -44,8 +44,8 @@ def save_bottleneck_features():
         train_dir,
         target_size = (img_width, image_height),
         batch_size = batch_size,
-        class_mode = None,
-        shuffle = False)
+        class_mode = 'categorical',
+        shuffle = True)
     bottleneck_features_train = pretrained_model.predict_generator(
         generator, nTrain // batch_size)
     
@@ -58,8 +58,8 @@ def save_bottleneck_features():
         val_dir,
         target_size = (img_width, image_height),
         batch_size = batch_size,
-        class_mode = None,
-        shuffle = False)
+        class_mode = 'categorical',
+        shuffle = True)
     bottleneck_features_validation = pretrained_model.predict_generator(
         generator, nValidation // batch_size)
     
@@ -68,16 +68,20 @@ def save_bottleneck_features():
         bottleneck_features_validation)
 
 
+
+#
+#Need to figure out a better way to label data
+#
 def train_top_model():
     #Load in the train data and create label array
     train_data = np.load(open('bottleneck_features_train.npy', 'rb'))
     train_labels = np.array(
-        [0] * (nTrain // 2) + [1] * (nTrain // 2))
+        [1] * (nTrain // 2) + [1] * (nTrain // 2))
 
     #Load in the train data and create label array
     validation_data = np.load(open('bottleneck_features_validation.npy', 'rb'))
     validation_labels = np.array(
-        [0] * (nValidation // 2) + [1] * (nValidation // 2))
+        [1] * (nValidation // 2) + [1] * (nValidation // 2))
 
     #Build new, small model to train on 
     newModel = keras.models.Sequential()
