@@ -44,7 +44,7 @@ def save_bottleneck_features():
         train_dir,
         target_size = (img_width, image_height),
         batch_size = batch_size,
-        class_mode = 'categorical',
+        class_mode = None,
         shuffle = True)
     bottleneck_features_train = pretrained_model.predict_generator(
         generator, nTrain // batch_size)
@@ -58,7 +58,7 @@ def save_bottleneck_features():
         val_dir,
         target_size = (img_width, image_height),
         batch_size = batch_size,
-        class_mode = 'categorical',
+        class_mode = None,
         shuffle = True)
     bottleneck_features_validation = pretrained_model.predict_generator(
         generator, nValidation // batch_size)
@@ -83,24 +83,28 @@ def train_top_model():
     validation_labels = np.array(
         [1] * (nValidation // 2) + [1] * (nValidation // 2))
 
-    #Build new, small model to train on 
+    #Build new, small model to train on
+
     newModel = keras.models.Sequential()
     newModel.add(Flatten(input_shape=train_data.shape[1:]))
-    newModel.add(keras.layers.Dense(256, activation = 'relu'))
-    newModel.add(keras.layers.Dropout(0.5))
-    newModel.add(keras.layers.Dense(1, activation = 'softmax'))
+    newModel.add(Dense(256, activation='relu'))
+    newModel.add(Dropout(0.5))
+    newModel.add(Dense(1, activation='sigmoid'))
+
+    #Maybe just retrain whole model instead of small section with weights?
 
     #Compile new model
     newModel.compile(optimizer = optimizers.RMSprop(lr=2e-4),
                 loss = 'binary_crossentropy',
                 metrics =['accuracy'])
-
+   
     #Train the model on the new data
     newModel.fit(train_data,
                 train_labels,
                 epochs = 20,
                 batch_size = batch_size,
                 validation_data = (validation_data, validation_labels))
+    newModel.save_weights("./Other Files/Transfer Weights.h5")
     
 save_bottleneck_features()
 train_top_model()

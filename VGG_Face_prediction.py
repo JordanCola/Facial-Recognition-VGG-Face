@@ -14,6 +14,13 @@ K.set_image_data_format('channels_last')
 #Load in the trained model
 model = keras.models.load_model("./Other Files/VGG_Face_pretrained_model.h5")
 
+#
+#Need to load in weights from newly trained model
+# model.set_weights should be used as model.load_weights can cause issues
+#Need to have same layer names for weights to be set correctly
+#working on transfer learning script so that proper weights are created.
+
+
 #Loading in the matlab file containing the VGG model weights
 from scipy.io import loadmat
 
@@ -48,7 +55,7 @@ def prediction(kmodel, img):
 # https://realpython.com/face-recognition-with-python/
 
 #Set image and cascade file paths
-imagePath = "./Test Images/Mark_Hamill.jpg"
+imagePath = "./Dataset/validation/Jordan Svoboda/Jordan_Svoboda1.jpg"
 cascadePath = "./Other Files/haarcascade_frontalface_default.xml"
 
 #Create the haar cascade
