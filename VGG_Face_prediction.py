@@ -19,7 +19,7 @@ model = keras.models.load_model("./Other Files/VGG_Face_pretrained_model.h5")
 # model.set_weights should be used as model.load_weights can cause issues
 #Need to have same layer names for weights to be set correctly
 #working on transfer learning script so that proper weights are created.
-
+#
 
 #Loading in the matlab file containing the VGG model weights
 from scipy.io import loadmat

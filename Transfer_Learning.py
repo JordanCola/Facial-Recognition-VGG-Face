@@ -68,6 +68,21 @@ def save_bottleneck_features():
         bottleneck_features_validation)
 
 
+#A method to add the layers for the retrained model to an existing model. Used to create the model for transfer learning
+#and used to add layers to the pretrained model to create a new model for facial recognition. Takes in a pre-exisitng model as input,
+#adds the layers, then returns the model with the layers added.
+
+def addSmallModel(inputModel):
+    if len(inputModel.layers) == 0:
+        inputModel.add(Flatten(input_shape=(7, 7, 512)))
+    else:
+        inputModel.add(Flatten())
+    
+    inputModel.add(Dense(256, activation='relu'))
+    inputModel.add(Dropout(0.5))
+    inputModel.add(Dense(1, activation='sigmoid'))    
+
+    return inputModel
 
 #
 #Need to figure out a better way to label data
@@ -84,14 +99,8 @@ def train_top_model():
         [1] * (nValidation // 2) + [1] * (nValidation // 2))
 
     #Build new, small model to train on
-
     newModel = keras.models.Sequential()
-    newModel.add(Flatten(input_shape=train_data.shape[1:]))
-    newModel.add(Dense(256, activation='relu'))
-    newModel.add(Dropout(0.5))
-    newModel.add(Dense(1, activation='sigmoid'))
-
-    #Maybe just retrain whole model instead of small section with weights?
+    newModel = addSmallModel(newModel)
 
     #Compile new model
     newModel.compile(optimizer = optimizers.RMSprop(lr=2e-4),
@@ -105,6 +114,23 @@ def train_top_model():
                 batch_size = batch_size,
                 validation_data = (validation_data, validation_labels))
     newModel.save_weights("./Other Files/Transfer Weights.h5")
+
+
+def createTransferModel():
+    pretrained_model = keras.models.load_model(model_location)
+
+    pretrained_model = addSmallModel(pretrained_model)
+
+    pretrained_model.summary()
+
+    #Compile new model
+    pretrained_model.compile(optimizer = optimizers.RMSprop(lr=2e-4),
+                loss = 'binary_crossentropy',
+                metrics =['accuracy'])
     
+    #Need to set weights and save model to use it for prediction
+    #pretrained_model.load_weights("./Other Files/Transfer Weights.h5")
+
 save_bottleneck_features()
 train_top_model()
+createTransferModel()
