@@ -12,7 +12,7 @@ from keras import backend as K
 K.set_image_data_format('channels_last')
 
 #Load in the trained model
-model = keras.models.load_model("./Other Files/VGG_Face_pretrained_model.h5")
+model = keras.models.load_model("./Other Files/Transfer_Model_TEST.h5")
 
 #
 #Need to load in weights from newly trained model
@@ -31,6 +31,17 @@ data = loadmat(filename,matlab_compatible=False, struct_as_record = False)
 
 #Sets the descriptions we will need access for prediction output
 description = data['meta'][0,0].classes[0,0].description
+
+#
+#something like this to identify image subject?
+#Would need to be added to a potentially new array for each new subject
+#
+#arr = np.array('Jordan_Svoboda', dtype= '<U14')
+#
+#description= np.append(description, arr)
+#
+#
+#
 
 #The prediction function
 def prediction(kmodel, img):

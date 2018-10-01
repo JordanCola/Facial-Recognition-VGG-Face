@@ -121,15 +121,25 @@ def createTransferModel():
 
     pretrained_model = addSmallModel(pretrained_model)
 
-    pretrained_model.summary()
-
     #Compile new model
     pretrained_model.compile(optimizer = optimizers.RMSprop(lr=2e-4),
                 loss = 'binary_crossentropy',
                 metrics =['accuracy'])
-    
-    #Need to set weights and save model to use it for prediction
-    #pretrained_model.load_weights("./Other Files/Transfer Weights.h5")
+
+    #pretrained_model.summary()
+
+    #
+    #Hopefully working now
+    #
+    #Set weights for small top model
+    pretrained_model.load_weights("./Other Files/Transfer Weights.h5", by_name = True)
+
+    #Recompile model with new weights
+    pretrained_model.compile(optimizer = optimizers.RMSprop(lr=2e-4),
+                loss = 'binary_crossentropy',
+                metrics =['accuracy'])
+    #Save new model
+    pretrained_model.save("./Other Files/Transfer_Model_TEST.h5")  
 
 save_bottleneck_features()
 train_top_model()
