@@ -73,6 +73,20 @@ def save_bottleneck_features():
 #adds the layers, then returns the model with the layers added.
 
 def addSmallModel(inputModel):
+    #if len(inputModel.layers) == 0:
+    #    inputModel.add( Convolution2D(4096, kernel_size=(7, 7), activation='relu', name='fc6', input_shape = (7, 7, 512)) )
+    #else:
+    #    inputModel.add( Convolution2D(4096, kernel_size=(7, 7), activation='relu', name='fc6') )
+
+    #inputModel.add( Dropout(0.5) )
+    #inputModel.add( Convolution2D(4096, kernel_size=(1, 1), activation='relu', name='fc7') )
+    #inputModel.add( Dropout(0.5))
+    #inputModel.add( Convolution2D(2622, kernel_size=(1, 1), activation='relu', name='fc8') ) 
+    #inputModel.add( Flatten() )
+    #inputModel.add( Activation('softmax') ) 
+    #inputModel.summary()
+    #return inputModel
+
     if len(inputModel.layers) == 0:
         inputModel.add(Flatten(input_shape=(7, 7, 512)))
     else:
@@ -81,8 +95,9 @@ def addSmallModel(inputModel):
     inputModel.add(Dense(256, activation='relu'))
     inputModel.add(Dropout(0.5))
     inputModel.add(Dense(1, activation='sigmoid'))    
-
+    inputModel.summary()
     return inputModel
+
 
 #
 #Need to figure out a better way to label data
@@ -101,7 +116,7 @@ def train_top_model():
     #Build new, small model to train on
     newModel = keras.models.Sequential()
     newModel = addSmallModel(newModel)
-
+    newModel.summary()
     #Compile new model
     newModel.compile(optimizer = optimizers.RMSprop(lr=2e-4),
                 loss = 'binary_crossentropy',
