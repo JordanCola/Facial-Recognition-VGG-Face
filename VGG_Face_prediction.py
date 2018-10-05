@@ -25,12 +25,12 @@ model = keras.models.load_model("./Other Files/VGG_Face_pretrained_model.h5")
 from scipy.io import loadmat
 
 #Should get changed depending on where file is
-filename = "./Other Files/vgg-face.mat"
+filename = "names.txt"
+file = open(filename)
+description = list()
+for line in file:
+    description=line.split(',')
 
-data = loadmat(filename,matlab_compatible=False, struct_as_record = False)
-
-#Sets the descriptions we will need access for prediction output
-description = data['meta'][0,0].classes[0,0].description
 
 #The prediction function
 def prediction(kmodel, img):
@@ -41,13 +41,13 @@ def prediction(kmodel, img):
 
     #Prediction Probability vector
     out= kmodel.predict(imarr)
-
+    
     #Most Probable item
     best_index = np.argmax(out, axis=1)[0]
 
     best_name = description[best_index]
     print('\nPrediction:')
-    print(best_index, best_name[0], out[0,best_index], [np.min(out), np.max(out)])
+    print(best_index, best_name, out[0,best_index], [np.min(out), np.max(out)])
 
 #BEGIN DETECTION IN UNCROPPED IMAGES
 

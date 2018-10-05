@@ -2,7 +2,7 @@
 from scipy.io import loadmat
 
 #Should get changed depending on where file is
-filename = "vgg-face.mat"
+filename = "./Other Files/vgg-face.mat"
 
 data = loadmat(filename,matlab_compatible=False, struct_as_record = False)
 
@@ -13,5 +13,5 @@ description = data['meta'][0,0].classes[0,0].description
 file=open("names.txt","w")
 
 for i in description:
-    name = i[0]
-    file.write(str(name)+"\n")
+    name = str(i[0])[2:-2]
+    file.write(name +",")
