@@ -12,7 +12,7 @@ from keras import backend as K
 K.set_image_data_format('channels_last')
 
 #Load in the trained model
-model = keras.models.load_model("./Other Files/VGG_Face_pretrained_model.h5")
+model = keras.models.load_model("./Other Files/Transfer_Model_TEST.h5")
 
 #
 #Need to load in weights from newly trained model
@@ -25,11 +25,11 @@ model = keras.models.load_model("./Other Files/VGG_Face_pretrained_model.h5")
 from scipy.io import loadmat
 
 #Should get changed depending on where file is
-filename = "names.txt"
-file = open(filename)
-description = list()
-for line in file:
-    description=line.split(',')
+#filename = "names.txt"
+#file = open(filename)
+description = ['Jordan_Svoboda', 'Mark_Hamill']
+#for line in file:
+#    description=line.split(',')
 
 
 #The prediction function
