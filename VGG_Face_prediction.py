@@ -12,7 +12,8 @@ from keras import backend as K
 K.set_image_data_format('channels_last')
 
 #Load in the trained model
-model = keras.models.load_model("./Other Files/Transfer_Model_TEST.h5")
+model = keras.models.load_model("./Other Files/VGG_Face_pretrained_model.h5")
+#model = keras.models.load_model("./Other Files/Transfer_Model_TEST.h5")
 
 #
 #Need to load in weights from newly trained model
@@ -25,11 +26,11 @@ model = keras.models.load_model("./Other Files/Transfer_Model_TEST.h5")
 from scipy.io import loadmat
 
 #Should get changed depending on where file is
-#filename = "names.txt"
-#file = open(filename)
-description = ['Jordan_Svoboda', 'Mark_Hamill']
-#for line in file:
-#    description=line.split(',')
+filename = "names.txt"
+file = open(filename)
+#description = ['Jordan_Svoboda','Mark_Hamill']
+for line in file:
+    description=line.split(',')
 
 
 #The prediction function
@@ -40,8 +41,9 @@ def prediction(kmodel, img):
     imarr = np.expand_dims(imarr, axis=0)
 
     #Prediction Probability vector
-    out= kmodel.predict(imarr)
-    
+    out= kmodel.predict(imarr) #Only outputting one probability each time
+    print(str(out))
+
     #Most Probable item
     best_index = np.argmax(out, axis=1)[0]
 

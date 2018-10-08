@@ -28,10 +28,10 @@ val_dir="./Dataset/validation"
 #Number of training and validation images. Shoule be 5:1 ratio
 #Use an even number for nTrain and nLabel, otherwise there will be a mismatch
 #In number of labels and number of images
-nTrain = 20
-nValidation = 4
+nTrain = 40
+nValidation = 8
 img_width, image_height = 224, 224
-batch_size = 4
+batch_size = 2
 
 def save_bottleneck_features():
     datagen = ImageDataGenerator(rescale=1./255)
@@ -45,7 +45,7 @@ def save_bottleneck_features():
         target_size = (img_width, image_height),
         batch_size = batch_size,
         class_mode = None,
-        shuffle = False)
+        shuffle = True)
     bottleneck_features_train = pretrained_model.predict_generator(
         generator, nTrain // batch_size)
     
@@ -59,7 +59,7 @@ def save_bottleneck_features():
         target_size = (img_width, image_height),
         batch_size = batch_size,
         class_mode = None,
-        shuffle = False)
+        shuffle = True)
     bottleneck_features_validation = pretrained_model.predict_generator(
         generator, nValidation // batch_size)
     
@@ -106,14 +106,14 @@ def train_top_model():
     #Load in the train data and create label array
     train_data = np.load(open('bottleneck_features_train.npy', 'rb'))
     train_labels = np.array(
-        [1] * (nTrain // 2) + [0] * (nTrain // 2))
+        [0] * (nTrain // 2) + [1] * (nTrain // 2))
 
     #print(str(train_labels))
 
     #Load in the train data and create label array
     validation_data = np.load(open('bottleneck_features_validation.npy', 'rb'))
     validation_labels = np.array(
-        [1] * (nValidation // 2) + [0] * (nValidation // 2))
+        [0] * (nValidation // 2) + [1] * (nValidation // 2))
     
     #print(str(validation_labels))
     #Build new, small model to train on
@@ -128,7 +128,7 @@ def train_top_model():
     #Train the model on the new data
     newModel.fit(train_data,
                 train_labels,
-                epochs = 20,
+                epochs = 250,
                 batch_size = batch_size,
                 validation_data = (validation_data, validation_labels))
     newModel.save_weights("./Other Files/Transfer Weights.h5")
