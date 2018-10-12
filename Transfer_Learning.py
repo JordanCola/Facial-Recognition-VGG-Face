@@ -73,35 +73,17 @@ def save_bottleneck_features():
 #adds the layers, then returns the model with the layers added.
 
 def addSmallModel(inputModel):
-    #if len(inputModel.layers) == 0:
-    #    inputModel.add( Convolution2D(4096, kernel_size=(7, 7), activation='relu', name='fc6', input_shape = (7, 7, 512)) )
-    #else:
-    #    inputModel.add( Convolution2D(4096, kernel_size=(7, 7), activation='relu', name='fc6') )
-
-    #inputModel.add( Dropout(0.5) )
-    #inputModel.add( Convolution2D(4096, kernel_size=(1, 1), activation='relu', name='fc7') )
-    #inputModel.add( Dropout(0.5))
-    #inputModel.add( Convolution2D(2622, kernel_size=(1, 1), activation='relu', name='fc8') ) 
-    #inputModel.add( Flatten() )
-    #inputModel.add( Activation('softmax') ) 
-    #inputModel.add(Dense(1, activation='sigmoid'))
-    #inputModel.summary()
-    #return inputModel
-
     if len(inputModel.layers) == 0:
-        inputModel.add(Flatten(input_shape=(7, 7, 512)))
+        inputModel.add(Flatten(input_shape=(7, 7, 512, 2)))
     else:
         inputModel.add(Flatten())
     
     inputModel.add(Dense(256, activation='relu'))
     inputModel.add(Dropout(0.5))
-    inputModel.add(Dense(1, activation='sigmoid'))    
+    inputModel.add(Dense(2, activation='sigmoid'))    
     #inputModel.summary()
     return inputModel
 
-#
-#Need to figure out proper way to label. Model trains correctly, but misidentifies subject
-#
 def train_top_model():
     #Load in the train data and create label array
     train_data = np.load(open('bottleneck_features_train.npy', 'rb'))
@@ -120,17 +102,25 @@ def train_top_model():
     newModel = keras.models.Sequential()
     newModel = addSmallModel(newModel)
     #newModel.summary()
+
+    #Convert integer class vector to binary class matrix
+    #Allows for multiple probability vector outputs fo proper face identification
+    from keras.utils.np_utils import to_categorical
+    cat_train_data = to_categorical(train_data, num_classes= 2)
+    cat_validation_data = to_categorical(validation_data,num_classes= 2)
+    cat_train_labels = to_categorical(train_labels, num_classes= 2)
+    cat_validation_labels = to_categorical(validation_labels, num_classes= 2)
     #Compile new model
     newModel.compile(optimizer = optimizers.RMSprop(lr=2e-4),
-                loss = 'binary_crossentropy',
+                loss = 'categorical_crossentropy',
                 metrics =['accuracy'])
-   
+ 
     #Train the model on the new data
-    newModel.fit(train_data,
-                train_labels,
-                epochs = 250,
+    newModel.fit(cat_train_data,
+                cat_train_labels,
+                epochs = 40,
                 batch_size = batch_size,
-                validation_data = (validation_data, validation_labels))
+                validation_data = (cat_validation_data, cat_validation_labels))
     newModel.save_weights("./Other Files/Transfer Weights.h5")
 
 
@@ -141,14 +131,11 @@ def createTransferModel():
 
     #Compile new model
     pretrained_model.compile(optimizer = optimizers.RMSprop(lr=2e-4),
-                loss = 'binary_crossentropy',
+                loss = 'categorical_crossentropy',
                 metrics =['accuracy'])
 
     #pretrained_model.summary()
 
-    #
-    #Hopefully working now
-    #
     #Set weights for small top model
     pretrained_model.load_weights("./Other Files/Transfer Weights.h5", by_name = True)
 
@@ -157,7 +144,7 @@ def createTransferModel():
                 loss = 'binary_crossentropy',
                 metrics =['accuracy'])
     #Save new model
-    pretrained_model.save("./Other Files/Transfer_Model_TEST.h5")  
+    pretrained_model.save("./Other Files/Transfer_Model.h5")  
 
 save_bottleneck_features()
 train_top_model()

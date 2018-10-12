@@ -1,5 +1,7 @@
 #Based on instructions and code found at 
 #https://aboveintelligent.com/face-recognition-with-keras-and-opencv-2baf2a83b799
+
+#Run Transfer_Learning.py to get the Transfer_Model.h5 file
 from keras.models import Sequential, Model
 from keras.layers import Input, Dense, Flatten, Dropout, Activation, Lambda, Permute, Reshape
 from keras.layers import Convolution2D, ZeroPadding2D, MaxPooling2D
@@ -12,25 +14,21 @@ from keras import backend as K
 K.set_image_data_format('channels_last')
 
 #Load in the trained model
-model = keras.models.load_model("./Other Files/VGG_Face_pretrained_model.h5")
-#model = keras.models.load_model("./Other Files/Transfer_Model_TEST.h5")
-
-#
-#Need to load in weights from newly trained model
-# model.set_weights should be used as model.load_weights can cause issues
-#Need to have same layer names for weights to be set correctly
-#working on transfer learning script so that proper weights are created.
-#
+#model = keras.models.load_model("./Other Files/VGG_Face_pretrained_model.h5")
+model = keras.models.load_model("./Other Files/Transfer_Model.h5")
 
 #Loading in the matlab file containing the VGG model weights
 from scipy.io import loadmat
 
 #Should get changed depending on where file is
-filename = "names.txt"
-file = open(filename)
-#description = ['Jordan_Svoboda','Mark_Hamill']
-for line in file:
-    description=line.split(',')
+#Use this for the pretrained model
+#filename = "names.txt"
+#file = open(filename)
+#for line in file:
+#    description=line.split(',')
+
+#Use this description for Transfer_Model. Need to add subjects in alphabetical order
+description = ['Jordan_Svoboda','Mark_Hamill']
 
 
 #The prediction function
@@ -41,8 +39,7 @@ def prediction(kmodel, img):
     imarr = np.expand_dims(imarr, axis=0)
 
     #Prediction Probability vector
-    out= kmodel.predict(imarr) #Only outputting one probability each time
-    print(str(out))
+    out= kmodel.predict(imarr)
 
     #Most Probable item
     best_index = np.argmax(out, axis=1)[0]
