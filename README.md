@@ -68,3 +68,32 @@ If run as is the output at the end of the program should correctly identify Mark
 ```
 1611 Mark_Hamill 0.9984921 [5.5088496e-11, 0.9984921]
 ```
+
+# Adding and Identifying New Faces
+## Using a Webcam
+The Webcam_Image_Capture.py script allows capture of images from a computer's webcam. Just run the script and press 'SPACE' to capture an image. Captured images are saved to the Webcam Captures folder. Once you are finished capturing images, press 'Q' to exit the script. 
+
+**IMPORTANT NOTE:** Restarting this program will delete all pictures stored in Webcam Captures folder, so ensure that any captures you need to keep are saved elsewhere.
+
+## Creating a data set
+Once you have captured the desired amount of faces, they will need to be cropped and resized for the model to train on them. The Dataset_Image_Crop.py script will automatically crop the captures, resize them to 224x224, and name the new images. 
+
+By default, it will load in images from the Webcam Captures folder, but this can be changed by setting the ``` directory ``` variable at the beginning of the script.
+
+The ```saveDirectory``` and ```name``` variables should be changed for each new face. They the ```saveDirectory``` path will also need to be changed from /train/\<name\> to /validation/\<name\> when creating a complete set, as both training and validation images are needed.  A 5:1 ratio of training to validation images is recommended. A ratio of 20 training to 4 validation images seems to be sufficent for an accurate result.
+  
+**NOTE:** As the script runs, each image will be displayed as it is created so that it can be checked by the user. Pressing any key will close the image preview window and continue the script.
+
+## Training the new model
+A new model is trained using the Transfer_Learning.py script. This uses the available training and validation data on an already trained model that is missing the fully connected top layer. This model is created by setting ```model = blankModel(True)``` to ```model = blankModel(False)``` in Trained_Model_Creation.py, and changing the save file name at the end of that script to ```model.save("./Other Files/VGG_Face_pretrained_model_no_top.h5")```. The Trained_Model_Creation.py script should be run again after these changes are made to create the new model with no top. This file is referenced at the beginning of Transfer_Learning.py as the ```model_location``` variable. 
+
+The values ```nTrain``` and ```nValidation``` should be updated with the new TOTAL number of training and validation images. If the same 20:4 ratio that was described in the previous section is used, then simply adding 20 and 4 to ```nTrain``` and ```nValidation``` respectively will give the new totals.
+
+Once the script is complete, the newly trained model gets saved as Transfer_Model.h5 in the Other Files directory.
+
+## Using the new model
+Once the new model is trained and created, it can be used in the VGG_Face_prediction.py script. Uncommenting the line ```model = keras.models.load_model("./Other Files/Transfer_Model.h5")``` and commenting out the other line will use the newly trained model in the prediction.
+
+The description list will also need to be updated in this file. Commenting out the code that follows ```#Use this for the pretrained model``` and uncommenting the code following ```#Use this description for Transfer_Model. Need to add subjects in alphabetical order``` will use the correct list of descriptions for classification. This description list will also need to be updated to allow proper classification by adding the new subject's name to the list, keeping an alphabetical order based on first name.
+
+Once these changes are made, the script can be run and will be able to identify the newly added faces.
