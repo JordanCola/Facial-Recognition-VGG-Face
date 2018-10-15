@@ -30,8 +30,8 @@ val_dir="./Dataset/validation"
 #In number of labels and number of images
 
 import os
-nTrain = sum([len(files) for r,d, files in os.walk("C:/Users/Jordan Svoboda/Documents/VGG Face Model Project/Dataset/train")])
-nValidation = sum([len(files) for r,d, files in os.walk("C:/Users/Jordan Svoboda/Documents/VGG Face Model Project/Dataset/validation")])
+nTrain = sum([len(files) for r,d, files in os.walk("./Dataset/train")])
+nValidation = sum([len(files) for r,d, files in os.walk("./Dataset/validation")])
 
 img_width, image_height = 224, 224
 batch_size = 2
