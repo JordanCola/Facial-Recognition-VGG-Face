@@ -87,8 +87,6 @@ The ```saveDirectory``` and ```name``` variables should be changed for each new 
 ## Training the new model
 A new model is trained using the Transfer_Learning.py script. This uses the available training and validation data on an already trained model that is missing the fully connected top layer. This model is created by setting ```model = blankModel(True)``` to ```model = blankModel(False)``` in Trained_Model_Creation.py, and changing the save file name at the end of that script to ```model.save("./Other Files/VGG_Face_pretrained_model_no_top.h5")```. The Trained_Model_Creation.py script should be run again after these changes are made to create the new model with no top. This file is referenced at the beginning of Transfer_Learning.py as the ```model_location``` variable. 
 
-The values ```nTrain``` and ```nValidation``` should be updated with the new TOTAL number of training and validation images. If the same 20:4 ratio that was described in the previous section is used, then simply adding 20 and 4 to ```nTrain``` and ```nValidation``` respectively will give the new totals.
-
 Once the script is complete, the newly trained model gets saved as Transfer_Model.h5 in the Other Files directory.
 
 ## Using the new model
