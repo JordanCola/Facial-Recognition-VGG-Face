@@ -1,7 +1,7 @@
 #Based on instructions and code found at 
 #https://aboveintelligent.com/face-recognition-with-keras-and-opencv-2baf2a83b799
 
-#Run Transfer_Learning.py to get the Transfer_Model.h5 file
+
 from keras.models import Sequential, Model
 from keras.layers import Input, Dense, Flatten, Dropout, Activation, Lambda, Permute, Reshape
 from keras.layers import Convolution2D, ZeroPadding2D, MaxPooling2D
@@ -14,21 +14,23 @@ from keras import backend as K
 K.set_image_data_format('channels_last')
 
 #Load in the trained model
-#model = keras.models.load_model("./Other Files/VGG_Face_pretrained_model.h5")
-model = keras.models.load_model("./Other Files/Transfer_Model.h5")
+model = keras.models.load_model("./Other Files/VGG_Face_pretrained_model.h5")
+#Run Transfer_Learning.py to get the Transfer_Model.h5 file
+#model = keras.models.load_model("./Other Files/Transfer_Model.h5")
 
 #Loading in the matlab file containing the VGG model weights
 from scipy.io import loadmat
 
 #Should get changed depending on where file is
 #Use this for the pretrained model
-#filename = "names.txt"
-#file = open(filename)
-#for line in file:
-#    description=line.split(',')
+filename = "names.txt"
+file = open(filename)
+for line in file:
+    description=line.split(',')
 
+#Needs to be automated
 #Use this description for Transfer_Model. Need to add subjects in alphabetical order
-description = ['Jordan_Svoboda','Mark_Hamill']
+#description = ['Jordan_Svoboda','Mark_Hamill']
 
 
 #The prediction function

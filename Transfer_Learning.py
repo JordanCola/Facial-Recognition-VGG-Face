@@ -28,6 +28,9 @@ val_dir="./Dataset/validation"
 #Number of training and validation images. Shoule be 5:1 ratio
 #Use an even number for nTrain and nLabel, otherwise there will be a mismatch
 #In number of labels and number of images
+#
+#This should be updated to change automatically with addition of new images
+#
 nTrain = 40
 nValidation = 8
 img_width, image_height = 224, 224
