@@ -25,14 +25,14 @@ model_location ="./Other Files/VGG_Face_pretrained_model_no_top.h5"
 train_dir="./Dataset/train"
 val_dir="./Dataset/validation"
 
-#Number of training and validation images. Shoule be 5:1 ratio
+#Number of training and validation images. Should be 5:1 ratio
 #Use an even number for nTrain and nLabel, otherwise there will be a mismatch
 #In number of labels and number of images
-#
-#This should be updated to change automatically with addition of new images
-#
-nTrain = 40
-nValidation = 8
+
+import os
+nTrain = sum([len(files) for r,d, files in os.walk("C:/Users/Jordan Svoboda/Documents/VGG Face Model Project/Dataset/train")])
+nValidation = sum([len(files) for r,d, files in os.walk("C:/Users/Jordan Svoboda/Documents/VGG Face Model Project/Dataset/validation")])
+
 img_width, image_height = 224, 224
 batch_size = 2
 
