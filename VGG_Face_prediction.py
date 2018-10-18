@@ -28,10 +28,10 @@ file = open(filename)
 for line in file:
     description=line.split(',')
 
-#Needs to be automated
+#Make sure this is alphabetized
 #Use this description for Transfer_Model. Need to add subjects in alphabetical order
-#description = ['Jordan_Svoboda','Mark_Hamill']
-
+#description = np.load(open('labels.npy', 'rb'))
+#print(str(description))
 
 #The prediction function
 def prediction(kmodel, img):
@@ -42,6 +42,7 @@ def prediction(kmodel, img):
 
     #Prediction Probability vector
     out= kmodel.predict(imarr)
+    #print(str(out))
 
     #Most Probable item
     best_index = np.argmax(out, axis=1)[0]

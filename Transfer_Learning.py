@@ -4,7 +4,7 @@
 
 #A script to train a pretrained model on new data using the transfer
 #learning method.
-
+import os
 import keras.utils
 from keras.preprocessing.image import ImageDataGenerator
 from keras.models import Sequential, Model
@@ -25,6 +25,9 @@ model_location ="./Other Files/VGG_Face_pretrained_model_no_top.h5"
 train_dir="./Dataset/train"
 val_dir="./Dataset/validation"
 
+labels = os.listdir(train_dir)
+np.save(open('labels.npy', 'wb'),labels)
+total_classes = len(labels)
 #Number of training and validation images. Should be 5:1 ratio
 #Use an even number for nTrain and nLabel, otherwise there will be a mismatch
 #In number of labels and number of images
@@ -77,13 +80,13 @@ def save_bottleneck_features():
 
 def addSmallModel(inputModel):
     if len(inputModel.layers) == 0:
-        inputModel.add(Flatten(input_shape=(7, 7, 512, 2)))
+        inputModel.add(Flatten(input_shape=(7, 7, 512, total_classes)))
     else:
         inputModel.add(Flatten())
     
     inputModel.add(Dense(256, activation='relu'))
     inputModel.add(Dropout(0.5))
-    inputModel.add(Dense(2, activation='sigmoid'))    
+    inputModel.add(Dense(total_classes, activation='sigmoid'))    
     #inputModel.summary()
     return inputModel
 
@@ -109,10 +112,10 @@ def train_top_model():
     #Convert integer class vector to binary class matrix
     #Allows for multiple probability vector outputs fo proper face identification
     from keras.utils.np_utils import to_categorical
-    cat_train_data = to_categorical(train_data, num_classes= 2)
-    cat_validation_data = to_categorical(validation_data,num_classes= 2)
-    cat_train_labels = to_categorical(train_labels, num_classes= 2)
-    cat_validation_labels = to_categorical(validation_labels, num_classes= 2)
+    cat_train_data = to_categorical(train_data, num_classes= total_classes)
+    cat_validation_data = to_categorical(validation_data, num_classes= total_classes)
+    cat_train_labels = to_categorical(train_labels, num_classes= total_classes)
+    cat_validation_labels = to_categorical(validation_labels, num_classes= total_classes)
     #Compile new model
     newModel.compile(optimizer = optimizers.RMSprop(lr=2e-4),
                 loss = 'categorical_crossentropy',
@@ -144,7 +147,7 @@ def createTransferModel():
 
     #Recompile model with new weights
     pretrained_model.compile(optimizer = optimizers.RMSprop(lr=2e-4),
-                loss = 'binary_crossentropy',
+                loss = 'categorical_crossentropy',
                 metrics =['accuracy'])
     #Save new model
     pretrained_model.save("./Other Files/Transfer_Model.h5")  
